@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cajero</title>
+</head>
+
+<body>
+
+    <!--1. Seccion en la que cargan los datos del usuario-->
+
+    <section>
+        <h1>Bienvenido, <%= datosCajero.nombreEmpleadoLogin %>
+        </h1>
+        <table>
+            <tr>
+                <td>ID de Empleado:</td>
+                <td>
+                    <%= datosCajero.idEmpleadoLogin %>
+                </td>
+            </tr>
+            <tr>
+                <td>Nombre:</td>
+                <td>
+                    <%= datosCajero.nombreEmpleadoLogin %>
+                </td>
+            </tr>
+            <tr>
+                <td>Cédula:</td>
+                <td>
+                    <%= datosCajero.cedulaEmpleadoLogin %>
+                </td>
+            </tr>
+            <tr>
+                <td>Correo Electrónico:</td>
+                <td>
+                    <%= datosCajero.correoEmpleadoLogin %>
+                </td>
+            </tr>
+            <tr>
+                <td>Usuario:</td>
+                <td>
+                    <%= datosCajero.usuarioEmpleadoLogin %>
+                </td>
+            </tr>
+            <tr>
+                <td>Dirección:</td>
+                <td>
+                    <%= datosCajero.direccionEmpleadoLogin %>
+                </td>
+            </tr>
+            <tr>
+                <td>Estado:</td>
+                <td>
+                    <%= datosCajero.estadoEmpleadoLogin %>
+                </td>
+            </tr>
+            <tr>
+                <td>Rol:</td>
+                <td>
+                    <%= datosCajero.rolEmpleadoLogin%>
+                </td>
+            </tr>
+        </table>
+    </section>
+
+
+    <h2>Lista de todos los usuarios</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID Cuenta</th>
+                <th>Nombre</th>
+                <th>Cédula</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Tipo de Cuenta</th>
+                <th>Usuario</th>
+                <th>Saldo</th>
+                <th>Estado</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody id="tablaUsuariosBody">
+
+        </tbody>
+    </table>
+
+    <script>
+        const empleadoActivoCuenta = "<%= datosCajero.usuarioEmpleadoLogin %>";
+
+        //1.3. Funcion para cargar todos los usuarios de la base de datos
+        function cargarUsuarios() {
+            fetch("/todosLosUsuarios")
+                .then(response => response.json())
+                .then(data => {
+                    const tabla = document.getElementById("tablaUsuariosBody");
+                    tabla.innerHTML = "";
+
+                    if (data.length === 0) {
+                        tabla.innerHTML = "<tr><td colspan='11'>No hay usuarios registrados</td></tr>";
+                    } else {
+                        data.forEach(usuario => {
+                            const estadoCuenta = usuario.db_estado_cuenta;
+
+                            const filaTablaUsuarios = document.createElement("tr");
+
+                            filaTablaUsuarios.innerHTML = `
+                                <td>${usuario.id_cuenta}</td>
+                                <td>${usuario.db_nombre_completo}</td>
+                                <td>${usuario.db_cedula}</td>
+                                <td>${usuario.db_correo_electronico}</td>
+                                <td>${usuario.db_telefono}</td>
+                                <td>${usuario.db_direccion}</td>
+                                <td>${usuario.db_tipo_cuenta}</td>
+                                <td>${usuario.db_usuario}</td>
+                                <td>${usuario.db_saldo_total}</td>
+                                <td>
+                                    <select class="estado-select" data-id="${usuario.id_cuenta}">
+                                        <option value="Activo" ${estadoCuenta === 'Activo' ? 'selected' : ''}>Activo</option>
+                                        <option value="Pendiente" ${estadoCuenta === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
+                                        <option value="Desactivado" ${estadoCuenta === 'Desactivado' ? 'selected' : ''}>Desactivado</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button class="actualizar-btn" 
+                                    data-id="${usuario.id_cuenta}" 
+                                    data-usuario="${usuario.db_usuario}">
+                                    Actualizar estado cuenta
+                                    </button>
+                                </td>
+                            `;
+
+                            tabla.appendChild(filaTablaUsuarios);
+                        });
+
+                        // Evento para actualizar estado de cuenta usando GET
+                        document.querySelectorAll(".actualizar-btn").forEach(btn => {
+                            btn.addEventListener("click", () => {
+                                const idCuenta = btn.getAttribute("data-id");
+                                const usuario = btn.getAttribute("data-usuario");
+                                //Revisar
+                                const select = document.querySelector(`select[data-id='${idCuenta}']`);
+                                const nuevoEstado = select.value;
+
+                                //1.1.Función para actualizar el estado de la cuenta del usuario
+                                // 1.1. Función para actualizar el estado de la cuenta del usuario
+                                fetch(`/actualizarEstadoCuenta/${idCuenta}?estado=${nuevoEstado}&usuario=${usuario}&entidadAprobatoria=${empleadoActivoCuenta}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.mensaje) {
+                                            alert(data.mensaje);
+                                            cargarUsuarios();    
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error("Error:", error);
+                                        alert("No se pudo actualizar el estado del usuario.");
+                                    });
+                            });
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("Error al cargar usuarios:", error);
+                    document.getElementById("tablaUsuariosBody").innerHTML = "<tr><td colspan='11'>Error al cargar los usuarios</td></tr>";
+                });
+        }
+
+        document.addEventListener("DOMContentLoaded", cargarUsuarios);
+    </script>
+
+
+
+
+
+
+    <h2>Lista de todos los depósitos</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID depósito</th>
+                <th>Usuario</th>
+                <th>Nombre</th>
+                <th>Monto</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody id="tablaDepositosBody"></tbody>
+    </table>
+
+
+
+
+    <script>
+        const entidadNombreAprobatoriaEmpleado = "<%= datosCajero.nombreEmpleadoLogin %>";
+        const entidadUsuarioAprobatoriaEmpleado = "<%= datosCajero.usuarioEmpleadoLogin %>";
+
+        //1.2. funcion para cargar solo los depositos generados de los usuarios, en la tabla
+        function cargarDepositos() {
+            fetch("/listarDepositos")
+                .then(response => response.json())
+                .then(data => {
+                    const tablaDepositos = document.getElementById("tablaDepositosBody");
+                    tablaDepositos.innerHTML = "";
+
+                    if (data.length === 0) {
+                        tablaDepositos.innerHTML = "<tr><td>No hay depósitos registrados</td></tr>";
+                        return;
+                    }
+
+                    data.forEach(deposito => {
+                        const estado = deposito.db_estado_transferencia;
+                        const deshabilitarBoton = estado === "Pagado";
+
+                        const filaTablaDepositos = document.createElement("tr");
+                        filaTablaDepositos.innerHTML = `
+                            <td>${deposito.id_transaccion}</td>
+                            <td>${deposito.db_usuario_cuenta_original}</td>
+                            <td>${deposito.db_nombre_usuario_original}</td>
+                            <td>$${deposito.db_saldo_monto_operacion}</td>
+                            <td>${new Date(deposito.db_fecha_transaccion).toLocaleString()}</td>
+                            <td>
+                                <select class="estado-deposito" data-id="${deposito.id_transaccion}">
+                                    <option value="Pendiente" ${estado === "Pendiente" ? "selected" : ""}>Pendiente</option>
+                                    <option value="Pagado" ${estado === "Pagado" ? "selected" : ""}>Pagado</option>
+                                    <option value="Cancelado" ${estado === "Cancelado" ? "selected" : ""}>Cancelado</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button class="aprobar-btn" data-id="${deposito.id_transaccion}" ${deshabilitarBoton ? "disabled" : ""}>
+                                    Actualizar estado depósito
+                                </button>
+                            </td>
+                        `;
+                        tablaDepositos.appendChild(filaTablaDepositos);
+                    });
+
+                    // Añadir eventos a los botones
+                    document.querySelectorAll(".aprobar-btn").forEach(btn => {
+                        btn.addEventListener("click", () => {
+                            //Revisar
+                            const idDposito = btn.getAttribute("data-id");
+                            const select = document.querySelector(`.estado-deposito[data-id="${idDposito}"]`);
+                            const nuevoEstado = select.value;
+
+                            //1.5. Función para actualizar el estado del depósito dependiendo del select
+                            fetch(`/actualizarEstadoDeposito/${idDposito}?estado=${nuevoEstado}&nombre=${entidadNombreAprobatoriaEmpleado}&usuario=${entidadUsuarioAprobatoriaEmpleado}`)
+
+                                .then(response => response.json())
+                                .then(data => {
+                                    alert(data.mensaje);
+                                    cargarDepositos();
+                                })
+                                .catch(err => {
+                                    alert("No se pudo actualizar el estado del depósito.");
+                                });
+                        });
+                    });
+                })
+                .catch(error => {
+                    document.getElementById("tablaDepositosBody").innerHTML = "<tr><td>Error al cargar los depósitos</td></tr>";
+                });
+        }
+
+        document.addEventListener("DOMContentLoaded", cargarDepositos);
+    </script>
+
+
+
+
+
+
+
+</body>
+
+</html>

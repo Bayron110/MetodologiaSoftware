@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrarse</title>
+</head>
+
+<body>
+
+
+    <a href="loginUsuario.html">Volver al inicio de sesion</a>
+
+    <!--2.4 Form para registrar al usuario-->
+    <h1>Registro</h1>
+    <br>
+    <form id="registrationForm" action="registroUsuario" method="post">
+
+        <!--Campo de nombre y apellidos usuario-->
+        <label for="nombreCompleto">Ingrese su nombres y apellidos</label>
+        <input type="text" name="nombreCompleto" id="nombreCompleto" placeholder="nombres y apellidos" required>
+
+        <!--Campo de la cedula del usuario-->
+        <br>
+        <label for="cedula">Ingrese su cédul (unico)</label>
+        <input type="text" name="cedula" id="cedula" placeholder="cédula" required>
+
+        <!--Campo del correo electronico del usuario-->
+        <br>
+        <label for="correoElectronico">Ingrese su correo electrónico (unico)</label>
+        <input type="text" name="correoElectronico" id="correoElectronico" placeholder="correoElectronico" required>
+
+        <!--Campo del telefono del usuario-->
+        <br>
+        <label for="telefono">Ingrese su número de contacto</label>
+        <input type="text" name="telefono" id="telefono" placeholder="número de contacto" required>
+
+        <!--Campo de la dirreccion del usuario-->
+        <br>
+        <label for="direccion">Ingrese su dirección</label>
+        <input type="text" name="direccion" id="direccion" placeholder="dirrección" required>
+
+        <!-- Campo del tipo de cuenta del usuario -->
+        <br>
+        <label for="tipoCuenta">Seleccione su tipo de cuenta</label>
+        <select name="tipoCuenta" id="tipoCuenta" required>
+            <option value="Cuenta Digital">Cuenta Digital</option>
+            <option value="Cuenta Corriente">Cuenta Corriente</option>
+            <option value="Cuenta Ideal">Cuenta Ideal</option>
+            <option value="Cuenta Ahorros">Cuenta Ahorros</option>
+        </select>
+
+        <!--Campo del usuario propio del usuario-->
+        <br>
+        <label for="usuario">Ingrese el nombre para su usuario (unico)</label>
+        <input type="text" name="usuario" id="usuario" placeholder="usuario" required>
+
+        <!--Campo de la contrasena del usuario-->
+        <br>
+        <label for="contrasena">Ingrese su contraseña</label>
+        <input type="password" name="contrasena" id="contrasena" placeholder="contraseña" required>
+
+        <!--Boton para registrarse en la base de datos-->
+        <br>
+        <input type="submit" value="Registrar">
+
+    </Form>
+
+    <script>
+
+
+
+    </script>
+
+
+
+</body>
+
+</html>

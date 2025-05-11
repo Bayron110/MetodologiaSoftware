@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuario</title>
+</head>
+
+<body>
+
+    <!--1. Seccion en la que cargan los datos del usuario-->
+
+    <section>
+        <h1>Cuenta Bancaria</h1>
+        <table>
+            <tr>
+                <td>ID de la cuenta:</td>
+                <td>
+                    <%= datos.idCuentaLogin %>
+                </td>
+            </tr>
+            <tr>
+                <td>Nombre:</td>
+                <td>
+                    <%= datos.nombreCompletoLogin %>
+                </td>
+            </tr>
+            <tr>
+                <td>Cédula:</td>
+                <td>
+                    <%= datos.cedulaLogin %>
+                </td>
+            </tr>
+            <tr>
+                <td>Correo Electrónico:</td>
+                <td>
+                    <%= datos.correoElectronicoLogin %>
+                </td>
+            </tr>
+            <tr>
+                <td>Teléfono:</td>
+                <td>
+                    <%= datos.telefonoLogin %>
+                </td>
+            </tr>
+            <tr>
+                <td>Tipo de Cuenta:</td>
+                <td>
+                    <%= datos.tipoCuentaLogin %>
+                </td>
+            </tr>
+            <tr>
+                <td>Usuario:</td>
+                <td>
+                    <%= datos.usuarioLogin %>
+                </td>
+            </tr>
+            <tr>
+                <td>Saldo Actual:</td>
+                <td>
+                    <%= datos.saldoTotalLogin %>
+                </td>
+            </tr>
+        </table>
+
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- 2. Sección en la que hace deposito a la misma cuenta-->
+
+    <!--2.2 Form para realizar depósito-->
+    <section>
+        <h1>Sección para hacer deposito</h1>
+
+        <form id="depositoUserForm" action="DepositoCuentaPropia" method="post">
+
+            <!-- Usuario cuenta original -->
+            <label for="usuarioCuentaOriginal">Usuario:</label>
+            <input type="text" name="usuarioCuentaOriginal" id="usuarioCuentaOriginal"
+                value="<%= datos.usuarioLogin %>" readonly required>
+
+            <label for="saldoActualCuentaOriginalDeposito">Saldo actual:</label>
+            <input type="number" name="saldoActualCuentaOriginalDeposito" id="saldoActualCuentaOriginalDeposito"
+            value="<%= datos.saldoTotalLogin %>" readonly>
+
+            <!-- Nombre del usuario -->
+            <br>
+            <label for="nombreUsuarioOriginal">Nombre del usuario original</label>
+            <input type="text" name="nombreUsuarioOriginal" id="nombreUsuarioOriginal"
+                value="<%= datos.nombreCompletoLogin %>" readonly>
+
+            <!-- Monto de la recarga -->
+            <br>
+            <label for="saldoModificado">Valor del depósito</label>
+            <input type="number" step="0.01" name="saldoModificado" id="saldoModificado" required>
+            
+
+            
+            <br>
+            <input type="submit" value="Finalizar depósito">
+        </form>
+    </section>
+
+    <script>
+        document.getElementById("depositoUserForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            const saldo = parseFloat(document.getElementById('saldoModificado').value);
+
+            if (saldo <= 0) {
+                alert("El valor del depósito debe ser mayor a 0.00 dólares");
+            } else {
+                const confirmarDepositoMensaje = confirm("¿Estás seguro de generar la solicitud de depósito?");
+
+                if (confirmarDepositoMensaje) {
+                    alert(`Recuerde acercarse a una sucursal a pagar el monto de: ${saldo} dólares.`);
+                    this.submit();
+                } else {
+                    alert("Depósito cancelado. No se creará la solicitud.");
+                }
+            }
+
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--3. Seccion en la que hace transferencia de dinero-->
+    <!--2.5 Form para realizar la tranferencia de una cuenta a otra-->
+
+    <section>
+        <h1>Sección para hacer Transferencia</h1>
+
+        <form id="transferenciaUserForm" action="transferenciaOtraCuenta" method="post">
+
+            <!-- Campo de usuario cuenta original (bloqueado) -->
+            <label for="usuarioCuentaOriginalTransferencia">Usuario:</label>
+            <input type="text" name="usuarioCuentaOriginalTransferencia" id="usuarioCuentaOriginalTransferencia"
+                value="<%= datos.usuarioLogin %>" readonly required>
+
+            <!-- Campo del nombre del usuario-->
+            <br>
+            <label for="nombreCuentaOriginalTransferencia">Su nombre:</label>
+            <input type="text" name="nombreCuentaOriginalTransferencia" id="nombreCuentaOriginalTransferencia"
+                value="<%= datos.nombreCompletoLogin %>" readonly required>
+
+            <!-- Campo de usuario cuenta destinatario -->
+            <br>
+            <label for="usuarioCuentaDestinatarioTransferencia">Ingrese el usuario de la cuenta destinatario:</label>
+            <input type="text" name="usuarioCuentaDestinatarioTransferencia" id="usuarioCuentaDestinatarioTransferencia"
+                required>
+
+            <!-- Campo del saldo anterior -->
+            <br>
+            <label for="saldoActualTransferencia">Saldo Actual</label>
+            <input type="number" step="0.01" name="saldoActualTransferencia" id="saldoActualTransferencia"
+                placeholder="saldo actual" value="<%= datos.saldoTotalLogin %>" readonly required>
+
+            <!-- Campo del saldo modificado -->
+            <br>
+            <label for="saldoModificadoTransferencia">Valor de la transferencia</label>
+            <input type="number" step="0.01" name="saldoModificadoTransferencia" id="saldoModificadoTransferencia"
+                placeholder="monto a transferir" required oninput="calcularSaldoRestante()">
+
+            <!-- Porcentaje que se lleva el banco -->
+            <br>
+            <label for="porcentajeBanco">El porcentaje que debe pagar por la transferencia es:</label>
+            <input type="number" step="0.01" name="porcentajeBanco" id="porcentajeBanco"
+                placeholder="Monto que se lleva el Banco" required readonly>
+
+            <!-- Campo del saldo final (calculado automáticamente y bloqueado) -->
+            <br>
+            <label for="saldoRestanteTransferencia">Saldo restante de su cuenta</label>
+            <input type="number" step="0.01" name="saldoRestanteTransferencia" id="saldoRestanteTransferencia"
+                placeholder="Saldo final" required readonly>
+
+            <!-- Botón para registrar la transacción -->
+            <br>
+            <input type="submit" value="Finalizar transferencia">
+        </form>
+    </section>
+
+    <!-- Script para calcular el saldo restante de la propia cuenta -->
+    <script>
+        function calcularSaldoRestante() {
+            const saldoActual = parseFloat(document.getElementById("saldoActualTransferencia").value);
+            const montoTransferencia = parseFloat(document.getElementById("saldoModificadoTransferencia").value);
+            const porcentajeBanco = 0.05;
+
+            if (!isNaN(saldoActual) && !isNaN(montoTransferencia)) {
+                const comisionBanco = montoTransferencia * porcentajeBanco;
+                const saldoFinal = saldoActual - montoTransferencia - comisionBanco;
+
+
+                document.getElementById("saldoRestanteTransferencia").value = saldoFinal.toFixed(2);
+
+                document.getElementById("porcentajeBanco").value = comisionBanco.toFixed(2);
+            }
+
+
+        }
+
+        document.getElementById("transferenciaUserForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const usuarioOrigen = document.getElementById("usuarioCuentaOriginalTransferencia").value.trim();
+            const usuarioDestinatario = document.getElementById("usuarioCuentaDestinatarioTransferencia").value.trim();
+            const saldoActual = parseFloat(document.getElementById("saldoActualTransferencia").value);
+            const montoTransferencia = parseFloat(document.getElementById("saldoModificadoTransferencia").value);
+            const comisionBanco = parseFloat(document.getElementById("porcentajeBanco").value);
+
+            const totalPorcentajeLLlevaBanco = montoTransferencia + comisionBanco;
+
+            // Validaciones básicas
+            if (usuarioDestinatario === "") {
+                alert("Debe ingresar un usuario destinatario.");
+                return;
+            }
+
+            if (isNaN(montoTransferencia) || montoTransferencia <= 0) {
+                alert("El monto a transferir debe ser mayor a 0.");
+                return;
+            }
+
+            if (usuarioOrigen === usuarioDestinatario) {
+                alert("No puede transferir dinero a su propia cuenta.");
+                return;
+            }
+
+            if (totalPorcentajeLLlevaBanco > saldoActual) {
+                alert("El monto a transferir excede el saldo disponible o no se cubre el procentaje necesario para concretar la transferencia.");
+                return;
+            }
+
+            //2.6.Verificar si el destinatario existe y está activo
+            fetch(`/revisarUsuarioDestinatario/${usuarioDestinatario}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.mensaje === "El usuario existe y está activo.") {
+                        if (confirm("¿Está seguro de que desea realizar esta transferencia?")) {
+                            alert("Transferencia enviada correctamente.");
+                            event.target.submit();
+                        } else {
+                            alert("Transferencia cancelada.");
+                        }
+                    } else {
+                        alert(data.mensaje);
+                    }
+                })
+                .catch(err => {
+                    console.error("Error al verificar el usuario destinatario:", err);
+                    alert("Error al verificar el usuario. Intente de nuevo.");
+                });
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <section>
+        <h2>Historial de transacciones</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>ID de la transaccion</th>
+                    <th>Usuario original de la transaccion</th>
+                    <th>Usuario destintario de la transaccion</th>
+                    <th>Tipo de transacción</th>
+                    <!--<th>Saldo anterior</th>-->  
+                    <th>Monto</th>
+                    <th>Impuesto</th>     
+                    <th>Estado de la transacción</th>
+                    <th>Fecha de la transacción</th>
+                </tr>
+            </thead>
+            <tbody id="tBody-HistorialTransaccionUsuario">
+
+            </tbody>
+        </table>
+    </section>
+
+
+    <!--2.1 Cargar datos en una tabla con el historia lde transacciones del usuario-->
+    <script>
+        const usuarioDatosID = "<%= datos.usuarioLogin %>";
+
+        fetch(`/historialTransaccionRecargaUsuario/${usuarioDatosID}`)
+            .then(response => response.json())
+            .then(data => {
+                const tablaHistorial = document.getElementById("tBody-HistorialTransaccionUsuario");
+                tablaHistorial.innerHTML = "";
+
+                if (data.mensaje) {
+                    tablaHistorial.innerHTML = `<tr><td colspan="7">${data.mensaje}</td></tr>`;
+                    return;
+
+                } else {
+                    data.forEach(datosTransaccion => {
+                        const filaTablaHistorial = document.createElement("tr");
+
+                        // Verificamos si el tipo de operación es "Deposito"
+                        let signoSegunCasoFinanciero = "";
+                        let signoPorcentajeBanco = "";
+
+                        if (parseFloat(datosTransaccion.db_porcentaje_banco)  === 0.00 || datosTransaccion.db_usuario_cuenta_destinatario === usuarioDatosID) {
+                            signoPorcentajeBanco = ""
+                        }else{
+                            signoPorcentajeBanco = "-"
+                        }
+
+                        // Si es un depósito, siempre es positivo
+                        if (datosTransaccion.db_tipo_operacion === "Deposito") {
+                            signoSegunCasoFinanciero = "+";
+                        }
+                        // Si es una transferencia
+                        else if (datosTransaccion.db_tipo_operacion === "Transferencia") {
+                            // Si el usuario es el destinatario, es positivo
+                            if (datosTransaccion.db_usuario_cuenta_destinatario === usuarioDatosID) {
+                                signoSegunCasoFinanciero = "+";
+                            } else {
+                                // Si no, es quien envió, entonces es negativo                            
+                                // <td>${datosTransaccion.db_saldo_cuenta_original_tenia}</td> 
+                                signoSegunCasoFinanciero = "-";
+                            }
+                        }
+                        filaTablaHistorial.innerHTML = `
+                            <td>${datosTransaccion.id_transaccion}</td>
+                            <td>${datosTransaccion.db_usuario_cuenta_original}</td>
+                            <td>${datosTransaccion.db_usuario_cuenta_destinatario}</td>
+                            <td>${datosTransaccion.db_tipo_operacion}</td>
+
+
+                            
+                            <td>${signoSegunCasoFinanciero}${datosTransaccion.db_saldo_monto_operacion}</td>
+                            <td>${signoPorcentajeBanco}${datosTransaccion.db_porcentaje_banco}</td>
+
+                            <td>${datosTransaccion.db_estado_transferencia}</td>
+                            <td>${new Date(datosTransaccion.db_fecha_transaccion).toLocaleString()}</td>
+                        `;
+                        tablaHistorial.appendChild(filaTablaHistorial);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Error al obtener historial:", error);
+            });
+    </script>
+
+
+
+
+
+</body>
+
+</html>

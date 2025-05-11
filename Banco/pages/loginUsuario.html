@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    
+    <!--2.3 Form para que el usuario inice sesión-->
+    <h1>Iniciar sesión</h1>
+
+    <br>
+    <Form id="loginForm" action="loginUser" method="post">
+
+        <!--Campo del correo electronico del usuario-->
+        <label for="correoElectronico">Ingrese su correo electrónico</label>
+        <input type="text" name="correoElectronico" id="correoElectronico" placeholder="correoElectronico">
+
+        <!--Campo de la contrasena del usuario-->
+        <br>
+        <label for="contrasena">Ingrese su contraseña</label>
+        <input type="text" name="contrasena" id="contrasena" placeholder="contraseña">
+
+        <!--Boton para comprobar informacion en la base de datos-->
+        <br>
+        <input type="submit" value="Ingresar">
+
+    </Form>
+
+    <h4>No tiene una cuenta registrate hoy </h4>
+    <a href="registerUsuario.html">Registrarse</a>
+
+    <h1>Trabajas con nosotros.Debes ingrsar sesión por aqui;</h1>
+    <a href="empleadoLogin.html">Ir a registro de empleados</a>
+    
+</body>
+</html>
