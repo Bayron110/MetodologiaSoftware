@@ -1,0 +1,92 @@
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #1f415d; /* Azul oscuro */
+    border-radius: 10px;
+    text-align: center; /* Centra el contenido */
+}
+
+.btn {
+    padding: 10px 20px;
+    margin: 10px;
+    text-decoration: none;
+    border-radius: 5px;
+    color: white;
+    background-color:#1f415d; 
+    font-size: 16px;
+}
+
+.btn-secondary {
+    background-color:#1f415d ; 
+}
+
+.btn:hover {
+    background-color: #00152e; 
+}
+.titulo-neobank {
+    text-align: center;
+    color: #ffffff;
+    transition: transform 0.3s ease; /* animación suave */
+  }
+  
+  .titulo-neobank:hover {
+    transform: translateY(-5px); /* se alza 100px al hacer hover */
+  }
+  
+  .logo-neobank {
+    width: 100px; /* puedes ajustar el tamaño */
+    height: auto;
+
+  }
+
+  .logo-neobank {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .logo-neobank:hover {
+    transform: scale(1.1);
+    box-shadow: 0 20px 20px rgba(255, 255, 255, 0.2);
+  }
+  .carousel-item img {
+    max-height: 400px;
+    width: auto;
+    object-fit: contain;
+  }
+  .card-img-top {
+    height: 150px;
+    object-fit: cover; /* o "contain", según lo que prefieras */
+  }
+  
+  
+  /* Estilos para móviles */
+@media (max-width: 576px) {
+  .titulo-neobank {
+    font-size: 24px;
+    text-align: center;
+  }
+
+  .logo-neobank {
+    width: 80px;
+  }
+
+  .btn {
+    width: 100%; /* botones a ancho completo */
+    margin-bottom: 10px;
+  }
+}
+
+/* Estilos para pantallas medianas (tablets) */
+@media (min-width: 577px) and (max-width: 991px) {
+  .titulo-neobank {
+    font-size: 32px;
+  }
+}
+
+/* Estilos para pantallas grandes (laptops y PCs) */
+@media (min-width: 992px) {
+  .titulo-neobank {
+    font-size: 48px;
+  }
+}
